@@ -59,10 +59,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "beauty_city.urls"
 
+TEMPLATE_DIR = Path(BASE_DIR).joinpath("templates")
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [TEMPLATE_DIR,],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -128,7 +130,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / "static/beauty_city",
 ]
 
 STATIC_ROOT = Path(BASE_DIR).joinpath("collected_static")
