@@ -110,25 +110,25 @@
 						<form action="#" class="serviceFinally__form">
 							<div class="serviceFinally__form_block">
 								<div class="serviceFinally__form_header fic">
-									<span class="serviceFinally__form_header__number">Запись №32985</span>
+									<span class="serviceFinally__form_header__number">Запись №{{ id }}</span>
 									<div class="serviceFinally__form_header__item fic">
-										<div class="serviceFinally__form_header__service">BeautyCity Пушкинская</div>
-										<div class="serviceFinally__form_header__address">ул. Пушкинская, д. 78А</div>
+										<div class="serviceFinally__form_header__service">{{ shop.name }}</div>
+										<div class="serviceFinally__form_header__address">{{ shop.address }}</div>
 									</div>
 								</div>
 								<div class="serviceFinally__form_content">
 									<div class="serviceFinally__form_content__block fic">
-										<div class="serviceFinally__form_content__title">Дневной макияж</div>
-										<div class="serviceFinally__form_content__price">750 ₽</div>
+										<div class="serviceFinally__form_content__title">{{ service.name }}</div>
+										<div class="serviceFinally__form_content__price">{{ service.price }} ₽</div>
 									</div>
 									<div class="serviceFinally__form_content__block fic">
 										<div class="serviceFinally__form_content__items fic">
-										  	<img src="{% static "/img/masters/avatar/vizajist1.svg" %}" alt="avatar" class="accordion__block_img">
-										  	<div class="accordion__block_master">Елена Грибнова</div>
+										  	<img src="{{ specialist.photo }}" alt="avatar" class="accordion__block_img">
+										  	<div class="accordion__block_master">{{ specialist.name }}</div>
 									    </div>
 									    <div class="serviceFinally__form_content__item fic">
-											<div class="serviceFinally__form_content__time">16:30</div>
-											<div class="serviceFinally__form_content__date">18 ноября</div>
+											<div class="serviceFinally__form_content__time">{{ service.time }}</div>
+											<div class="serviceFinally__form_content__date">{{ service.date }}</div>
 										</div>
 									</div>
 									
