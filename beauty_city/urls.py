@@ -16,7 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls.static import static
+from django.conf import settings
+
+from beauty_city_app import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+    path('', views.index, name='index'),
+    path('service', views.service, name='service'),
+    path('serviceFinally', views.service_final, name='service_final'),
+    path('notes', views.notes, name='notes'),
+    path('manager', views.manager, name='manager'),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
