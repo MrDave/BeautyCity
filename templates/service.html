@@ -16,6 +16,7 @@
 	<link rel="stylesheet" href="{% static "/css/air-datepicker.css" %}">
 	<script src="{% static "/js/air-datepicker.js" %}"></script>
 	<link rel="stylesheet" href="{% static "/css/main.css" %}">
+	{{ data|json_script:"shops-list" }}
 </head>
 <body class="servicePage">
 	<section id="mobMenu">
@@ -108,12 +109,22 @@
 				</div>
 				
 				<form action="#" class="service__form">
-					<!-- <select name="selectSalon" id="" class="service__form_select">
-						<option value="" selected>(Выберите салон)</option>
-						<option value="salon1" >Салон 1</option>
+						<!-- <option value="salon1" >Салон 1</option>
 						<option value="salon2" >Салон 2</option>
-						<option value="salon3" >Салон 3</option>
-					</select> -->
+						<option value="salon3" >Салон 3</option> -->
+            <select name="selectSalon" id="chooseShops" class="service__form_select">
+              <option value="" selected>(Выберите салон)</option>
+            </select>
+            <select name="selectServiceType" id="chooseServiceType" class="service__form_select">
+              <option value="" selected>(Выберите тип услуги)</option>
+            </select>
+            <select name="selectService" id="chooseService" class="service__form_select">
+              <option value="" selected>(Выберите услугу)</option>
+            </select>
+            <select name="selectSpecialist" id="chooseSpecialist" class="service__form_select">
+              <option value="" selected>(Выберите мастера)</option>
+            </select>
+          <!--
 					<div class="service__form_block service__salons">
 						<button class="accordion">(Выберите салон)</button>
 						<div class="panel">
@@ -152,7 +163,7 @@
 						
 
 					</div>
-					
+        -->
 				</form>
 			</div>
 		</div>

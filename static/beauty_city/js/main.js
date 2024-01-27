@@ -412,7 +412,7 @@ $(document).ready(function() {
 			$('.time__btns_next').addClass('active')
 		}
 	})
-	
+	// BeautyCity team features
 	$(document).on('click', '.time__btns_home', function(){
 		window.location.href = '/';
 	})
@@ -425,5 +425,29 @@ $(document).ready(function() {
 		new_location += (shop?'shop='+shop:'') + (service?'service='+service:'') + (specialist?'specialist='+specialist:'')
 		window.location.href = encodeURI(new_location);
 	})
+
+	function populate_select(select_id, select_data) {
+		let select_tag = $(select_id);
+		let new_html = ''
+		//$(select_id+' not([selected])').remove();
+		$(select_id+' option:not([selected])').remove()
+		Object.keys(select_data).forEach(key => {
+			new_html += "<option value='"+key+"' >"+select_data[key].name+"</option>";
+		});
+		select_tag.append(new_html);
+	}
+
+	data = JSON.parse($('#shops-list').text());
+	populate_select('select#chooseShops', data.shops);
+
+	$('#chooseShops').on('change', function() {
+		id = $(this).val();
+		populate_select('select#chooseServiceType', data.shops[id].service_types);
+	});
+
+	$('#chooseServiceType').on('change', function() {
+		id = $(this).val();
+		populate_select('select#chooseService', data.shops[id].service_types[id].services);
+	});
 
 })
