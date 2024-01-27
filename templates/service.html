@@ -112,19 +112,19 @@
 						<!-- <option value="salon1" >Салон 1</option>
 						<option value="salon2" >Салон 2</option>
 						<option value="salon3" >Салон 3</option> -->
-            <select name="shop" id="shop" class="service__form_select">
+            <select name="shop" id="shop_selector" class="service__form_select">
               <option value="" selected>(Выберите салон)</option>
               {% for pk, name in shops %}
                 <option value="{{ pk }}" >{{ name }}</option>
               {% endfor %}
             </select>
-            <select name="service_type" id="service_type" class="service__form_select">
+            <select name="service_type" id="service_type_selector" class="service__form_select">
               <option value="" selected>(Выберите тип услуги)</option>
             </select>
-            <select name="service" id="service" class="service__form_select">
+            <select name="service" id="service_selector" class="service__form_select">
               <option value="" selected>(Выберите услугу)</option>
             </select>
-            <select name="specialist" id="specialist" class="service__form_select">
+            <select name="specialist" id="specialist_selector" class="service__form_select">
               <option value="" selected>(Выберите мастера)</option>
             </select>
           <!--

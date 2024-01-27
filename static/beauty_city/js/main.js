@@ -414,15 +414,22 @@ $(document).ready(function() {
 		// $(this).hasClass('active') ? $(this).removeClass('active') : $(this).addClass('active')
 	})
 
-	$(document).on('click', '.servicePage', function() {
+/*	$(document).on('click', '.servicePage', function() {
 		if($('.time__items .time__elems_elem .time__elems_btn').hasClass('active') && $('.service__form_block > button').hasClass('selected')) {
 			$('.time__btns_next').addClass('active')
 		}
 	})
+*/
 	// BeautyCity team features
+	$(document).on('click', '.servicePage', function() {
+		if($('#shop_selector').val() && $('#service_selector').val()) {
+			$('.time__btns_next').addClass('active')
+		}
+	});
+
 	$(document).on('click', '.time__btns_home', function(){
 		window.location.href = '/';
-	})
+	});
 
 	// Button "Далее" on service.html
 /*	$(document).on('click', '.time__btns_next', function(){
@@ -445,7 +452,7 @@ $(document).ready(function() {
 		select_tag.append(new_html);
 	}
 
-	$('#shop').on('change', function() {
+	$('#shop_selector').on('change', function() {
 		id = $(this).val()
 		data = {'shop': id};
 		if (id) {
@@ -455,17 +462,17 @@ $(document).ready(function() {
 				dataType: 'json',          /* Тип данных в ответе (xml, json, script, html). */
 				data: data,     /* Параметры передаваемые в запросе. */
 				success: function(data){   /* функция которая будет выполнена после успешного запроса.  */
-					populate_select('select#service_type', data.service_types);            /* В переменной data содержится ответ от index.php. */
+					populate_select('#service_type_selector', data.service_types);            /* В переменной data содержится ответ от index.php. */
 				}
 			});
 		}
 		
 	});
 
-	$('#service_type').on('change', function() {
+	$('#service_type_selector').on('change', function() {
 		id = $(this).val();
 		data = {
-			'shop': $('#shop').val(),
+			'shop': $('#shop_selector').val(),
 			'service_type': id,
 		};
 		if (id) {
@@ -475,17 +482,17 @@ $(document).ready(function() {
 				dataType: 'json',          /* Тип данных в ответе (xml, json, script, html). */
 				data: data,     /* Параметры передаваемые в запросе. */
 				success: function(data){   /* функция которая будет выполнена после успешного запроса.  */
-					populate_select('select#service', data.services);   /* В переменной data содержится ответ от index.php. */
+					populate_select('#service_selector', data.services);   /* В переменной data содержится ответ от index.php. */
 				}
 			});
 		}
 	});
 
-	$('#service').on('change', function() {
+	$('#service_selector').on('change', function() {
 		id = $(this).val();
 		data = {
-			'shop': $('#shop').val(),
-			'service_type': $('#service_type').val(),
+			'shop': $('#shop_selector').val(),
+			'service_type': $('#service_type_selector').val(),
 			'service': id,
 		};
 		if (id) {
@@ -495,7 +502,7 @@ $(document).ready(function() {
 				dataType: 'json',          /* Тип данных в ответе (xml, json, script, html). */
 				data: data,     /* Параметры передаваемые в запросе. */
 				success: function(data){   /* функция которая будет выполнена после успешного запроса.  */
-					populate_select('select#specialist', data.specialists);   /* В переменной data содержится ответ от index.php. */
+					populate_select('#specialist_selector', data.specialists);   /* В переменной data содержится ответ от index.php. */
 				}
 			});
 		}

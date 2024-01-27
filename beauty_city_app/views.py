@@ -143,11 +143,12 @@ def manager(request):
 def get_select_tag_payload(request):
     print(f'{request.GET=}')
 
-    if not request.GET.get('shop'):
-        return
+    shop = request.GET.get('shop')
+    if not shop:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     service_type = request.GET.get('service_type')
     if not service_type:
-        return Response({'service_types': 
+        return Response({'service_types':
                          list(map(list, Service.SERVICE_TYPES))})
     service = request.GET.get('service')
     if not service:
@@ -155,6 +156,13 @@ def get_select_tag_payload(request):
                          list(map(list, Service.objects
                                   .filter(service_type=service_type)
                                   .values_list('pk', 'name')))})
-    return Response({'status': 'ok',
-                     'tag_data': {'1': '2'}},
-                    status=status.HTTP_200_OK, )
+    specialist = request.GET.get('specialist')
+    if not specialist:
+        return Response({
+            'specialists': [{
+                'pk': '4', 'name': 'Мария Максимова',
+            }, {
+                'pk': '5', 'name': 'Анастасия Сергеева',
+            },]
+        })
+    return Response(status=status.HTTP_400_BAD_REQUEST)
