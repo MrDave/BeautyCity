@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
+from .models import Service, Shop, Specialist
 
 
 def index(request):
@@ -86,71 +88,11 @@ def index(request):
 
 
 def service(request):
-    # Пример значений для заполнения шаблона
+    shops = [(pk, f'{name} {address}') for pk, name, address
+             in Shop.objects.values_list('id', 'name', 'address')]
+    # Заглушка для выбора таймслотов
     context = {
-        'shops': [
-            {
-                'name': 'BeautyCity Пушкинская',
-                'address': 'ул. Пушкинская, д. 78А',
-            },
-            {
-                'name': 'BeautyCity Ленина',
-                'address': 'ул. Ленина, д. 211',
-            },
-            {
-                'name': 'BeautyCity Красная',
-                'address': 'ул. Красная, д. 10',
-            },
-        ],
-        'service_types': [
-            {
-                'name': 'Парикмахерские услуги',
-                'services': [
-                    {
-                        'name': 'Окрашивание волос',
-                        'price': 5000,
-                    },
-                    {
-                        'name': 'Укладка волос',
-                        'price': 1500,
-                    },
-                ],
-            },
-            {
-                'name': 'Ногтевой сервис',
-                'services': [
-                    {
-                        'name': 'Маникюр. Классический',
-                        'price': 1400,
-                    },
-                    {
-                        'name': 'Педикюр',
-                        'price': 1400,
-                    },
-                    {
-                        'name': 'Наращивание ногтей',
-                        'price': 1500,
-                    },
-                ],
-            },
-            {
-                'name': 'Макияж',
-                'services': [
-                    {
-                        'name': 'Дневной макияж',
-                        'price': 1400,
-                    },
-                    {
-                        'name': 'Свадебный макияж',
-                        'price': 3000,
-                    },
-                    {
-                        'name': 'Вечерний макияж',
-                        'price': 2000,
-                    },
-                ],
-            }
-        ],
+        'shops': shops,
         'timeslots': {
             'morning': [
                 '10:00', '10:30',
@@ -163,167 +105,30 @@ def service(request):
             ]
         }
     }
-    data = {
-        'shops': {
-            '1': {'name': 'BeautyCity Пушкинская ул. Пушкинская, д. 78А',
-                'service_types': {
-                    '1': {
-                        'name': 'Парикмахерские услуги',
-                        'services': {
-                            '1': {
-                                'name': 'Окрашивание волос 5 000р.',
-                            },
-                            '2': {
-                                'name': 'Укладка волос 1 500р.',
-                            },
-                        },
-                    },
-                    '2': {
-                        'name': 'Ногтевой сервис',
-                        'services': {
-                            '3': {
-                                'name': 'Маникюр. Классический 1400р.',
-                            },
-                            '4': {
-                                'name': 'Педикюр 1 400р.',
-                            },
-                            '5': {
-                                'name': 'Наращивание ногтей 1500р.',
-                            },
-                        },
-                    },
-                    '3': {
-                        'name': 'Макияж',
-                        'services': {
-                            '6': {
-                                'name': 'Дневной макияж 1 400р.',
-                            },
-                            '7': {
-                                'name': 'Свадебный макияж 3 000р.',
-                            },
-                            '8': {
-                                'name': 'Вечерний макияж 2 000р.',
-                            },
-                        },
-                    }
-                },
-            },
-            '2': {
-                'name': 'BeautyCity Ленина ул. Ленина, д. 211',
-                'service_types': {
-                    '1': {
-                        'name': 'Парикмахерские услуги',
-                        'services': {
-                            '1': {
-                                'name': 'Окрашивание волос 5 000р.',
-                            },
-                            '2': {
-                                'name': 'Укладка волос 1 500р.',
-                            },
-                        },
-                    },
-                    '2': {
-                        'name': 'Ногтевой сервис',
-                        'services': {
-                            '3': {
-                                'name': 'Маникюр. Классический 1400р.',
-                            },
-                            '4': {
-                                'name': 'Педикюр 1 400р.',
-                            },
-                            '5': {
-                                'name': 'Наращивание ногтей 1500р.',
-                            },
-                        },
-                    },
-                    '3': {
-                        'name': 'Макияж',
-                        'services': {
-                            '6': {
-                                'name': 'Дневной макияж 1 400р.',
-                            },
-                            '7': {
-                                'name': 'Свадебный макияж 3 000р.',
-                            },
-                            '8': {
-                                'name': 'Вечерний макияж 2 000р.',
-                            },
-                        },
-                    }
-                },
-            },
-            '3': {
-                'name': 'BeautyCity Красная ул. Красная, д. 10',
-                'service_types': {
-                    '1': {
-                        'name': 'Парикмахерские услуги',
-                        'services': {
-                            '1': {
-                                'name': 'Окрашивание волос 5 000р.',
-                            },
-                            '2': {
-                                'name': 'Укладка волос 1 500р.',
-                            },
-                        },
-                    },
-                    '2': {
-                        'name': 'Ногтевой сервис',
-                        'services': {
-                            '3': {
-                                'name': 'Маникюр. Классический 1400р.',
-                            },
-                            '4': {
-                                'name': 'Педикюр 1 400р.',
-                            },
-                            '5': {
-                                'name': 'Наращивание ногтей 1500р.',
-                            },
-                        },
-                    },
-                    '3': {
-                        'name': 'Макияж',
-                        'services': {
-                            '6': {
-                                'name': 'Дневной макияж 1 400р.',
-                            },
-                            '7': {
-                                'name': 'Свадебный макияж 3 000р.',
-                            },
-                            '8': {
-                                'name': 'Вечерний макияж 2 000р.',
-                            },
-                        },
-                    }
-                },
-            },
-        }
-    }
-
-    context['data'] = data
     return render(request, 'service.html', context)
 
 
 def service_final(request):
+    shops_queryset = Shop.objects.values('pk', 'name', 'address', )
+    shop = get_object_or_404(shops_queryset, pk=request.GET.get('shop'))
+    services_queryset = Service.objects.values('pk', 'name', 'price', )
+    service = get_object_or_404(services_queryset,
+                                pk=request.GET.get('service'))
     # Пример значений для заполнения шаблона
     context = {
-        'order': {
-            'id': 32985,
-            'shop': {
-                'name': 'BeautyCity Пушкинская,',
-                'address': 'ул. Пушкинская, д. 78А'
-            },
-            'service': {
-                'name': 'Дневной макияж', 'price': 750,
-                'time': '16:30', 'date': '18 ноября',
-            },
-            'specialist': {
-                'name': 'Елена Грибнова',
-                'photo': '/static/img/masters/avatar/vizajist1.svg'
-            }
-
+        'id': '?????',
+        'shop': shop,
+        'service': service,
+        'timeslot': {
+            'time': '16:30', 'date': '18 ноября',
+        },
+        'specialist': {
+            'name': 'Елена Грибнова',
+            'photo': '/static/img/masters/avatar/vizajist1.svg'
         }
     }
-    return render(request, 'serviceFinally.html', context['order'])
+    print(context)
+    return render(request, 'serviceFinally.html', context)
 
 
 def notes(request):
@@ -337,6 +142,19 @@ def manager(request):
 @api_view(['GET', 'POST,'])
 def get_select_tag_payload(request):
     print(f'{request.GET=}')
+
+    if not request.GET.get('shop'):
+        return
+    service_type = request.GET.get('service_type')
+    if not service_type:
+        return Response({'service_types': 
+                         list(map(list, Service.SERVICE_TYPES))})
+    service = request.GET.get('service')
+    if not service:
+        return Response({'services':
+                         list(map(list, Service.objects
+                                  .filter(service_type=service_type)
+                                  .values_list('pk', 'name')))})
     return Response({'status': 'ok',
                      'tag_data': {'1': '2'}},
                     status=status.HTTP_200_OK, )

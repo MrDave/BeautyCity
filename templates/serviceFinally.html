@@ -112,12 +112,14 @@
 								<div class="serviceFinally__form_header fic">
 									<span class="serviceFinally__form_header__number">Запись №{{ id }}</span>
 									<div class="serviceFinally__form_header__item fic">
+										<input type="hidden" name="shop" value="{{ shop.pk }}" />
 										<div class="serviceFinally__form_header__service">{{ shop.name }}</div>
 										<div class="serviceFinally__form_header__address">{{ shop.address }}</div>
 									</div>
 								</div>
 								<div class="serviceFinally__form_content">
 									<div class="serviceFinally__form_content__block fic">
+										<input type="hidden" name="service" value="{{ service.pk }}" />
 										<div class="serviceFinally__form_content__title">{{ service.name }}</div>
 										<div class="serviceFinally__form_content__price">{{ service.price }} ₽</div>
 									</div>
@@ -136,9 +138,9 @@
 							</div>
 							<div class="serviceFinally__form_itesm">
 								<div class="contacts__form_block fic">
-									<input type="text" name="fname" class="contacts__form_iunput" placeholder="Введите имя" required="">
+									<input type="text" name="username" class="contacts__form_iunput" placeholder="Введите имя" required="">
 									<div class="contacts__form_inputBlock">
-										<input type="text" name="tel" class="contacts__form_iunput" placeholder="+7(999)999--99-99" required="">
+										<input type="text" name="phone" class="contacts__form_iunput" placeholder="+7(999)999--99-99" required="">
 									</div>
 								</div>
 								

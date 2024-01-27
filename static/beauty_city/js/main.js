@@ -125,7 +125,14 @@ $(document).ready(function() {
 		$('#mobMenu').hide()
 	})
 
-	new AirDatepicker('#datepickerHere')
+	startdate = new Date();
+	lastdate = new Date(startdate);
+	lastdate.setDate(lastdate.getDate()+14);
+	date_picker = new AirDatepicker('#datepickerHere', {
+				minDate: startdate,
+				maxDate: lastdate,
+	});
+
 
 	var acc = document.getElementsByClassName("accordion");
 	var i;
@@ -427,27 +434,71 @@ $(document).ready(function() {
 		window.location.href = encodeURI(new_location);
 	})
 */
+
 	function populate_select(select_id, select_data) {
 		let select_tag = $(select_id);
 		let new_html = ''
 		$(select_id+' option:not([selected])').remove()
-		Object.keys(select_data).forEach(key => {
-			new_html += "<option value='"+key+"' >"+select_data[key].name+"</option>";
+		select_data.forEach(pair => {
+			new_html += "<option value='" + pair[0] + "' >" + pair[1] + "</option>";
 		});
 		select_tag.append(new_html);
 	}
 
-	data = JSON.parse($('#shops-list').text());
-	populate_select('select#shop', data.shops);
-
 	$('#shop').on('change', function() {
-		id = $(this).val();
-		populate_select('select#service_type', data.shops[id].service_types);
+		id = $(this).val()
+		data = {'shop': id};
+		if (id) {
+			$.ajax({
+				url: 'api',         /* Куда пойдет запрос */
+				method: 'get',             /* Метод передачи (post или get) */
+				dataType: 'json',          /* Тип данных в ответе (xml, json, script, html). */
+				data: data,     /* Параметры передаваемые в запросе. */
+				success: function(data){   /* функция которая будет выполнена после успешного запроса.  */
+					populate_select('select#service_type', data.service_types);            /* В переменной data содержится ответ от index.php. */
+				}
+			});
+		}
+		
 	});
 
 	$('#service_type').on('change', function() {
 		id = $(this).val();
-		populate_select('select#service', data.shops[id].service_types[id].services);
+		data = {
+			'shop': $('#shop').val(),
+			'service_type': id,
+		};
+		if (id) {
+			$.ajax({
+				url: 'api',         /* Куда пойдет запрос */
+				method: 'get',             /* Метод передачи (post или get) */
+				dataType: 'json',          /* Тип данных в ответе (xml, json, script, html). */
+				data: data,     /* Параметры передаваемые в запросе. */
+				success: function(data){   /* функция которая будет выполнена после успешного запроса.  */
+					populate_select('select#service', data.services);   /* В переменной data содержится ответ от index.php. */
+				}
+			});
+		}
+	});
+
+	$('#service').on('change', function() {
+		id = $(this).val();
+		data = {
+			'shop': $('#shop').val(),
+			'service_type': $('#service_type').val(),
+			'service': id,
+		};
+		if (id) {
+			$.ajax({
+				url: 'api',         /* Куда пойдет запрос */
+				method: 'get',             /* Метод передачи (post или get) */
+				dataType: 'json',          /* Тип данных в ответе (xml, json, script, html). */
+				data: data,     /* Параметры передаваемые в запросе. */
+				success: function(data){   /* функция которая будет выполнена после успешного запроса.  */
+					populate_select('select#specialist', data.specialists);   /* В переменной data содержится ответ от index.php. */
+				}
+			});
+		}
 	});
 
 })

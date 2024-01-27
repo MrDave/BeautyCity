@@ -114,6 +114,9 @@
 						<option value="salon3" >Салон 3</option> -->
             <select name="shop" id="shop" class="service__form_select">
               <option value="" selected>(Выберите салон)</option>
+              {% for pk, name in shops %}
+                <option value="{{ pk }}" >{{ name }}</option>
+              {% endfor %}
             </select>
             <select name="service_type" id="service_type" class="service__form_select">
               <option value="" selected>(Выберите тип услуги)</option>
@@ -210,7 +213,7 @@
 				<div class="time__btns">
 					<div class="row">
 						<div class="col-md-12">
-							<input  type="submit" form="orderform" class="time__btns_next">Далее</button>
+							<button  type="submit" form="orderform" class="time__btns_next">Далее</button>
 							<button  class="time__btns_home">На главную</button>
 						</div>
 					</div>
