@@ -3,6 +3,7 @@ from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from beauty_city_app.models import Appointment
 from django.utils import timezone
+from django.db.models import Count
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -13,68 +14,15 @@ from beauty_city_app.models import Appointment, Service, Shop, Specialist
 
 def index(request):
     # Пример значений для заполнения шаблона
+
+    shops = Shop.objects.all()
+    services = Service.objects.all()
+    specialists = Specialist.objects.annotate(review_count=Count('reviews'))
+
     context = {
-        'shops': [
-            {
-                'name': 'BeautyCity Пушкинская',
-                'address': 'ул. Пушкинская, д. 78А',
-                'photo': '/static/img/salons/salon1.svg',
-                'works_at': 'с 10:00 до 20:00  без выходных',
-            },
-            {
-                'name': 'BeautyCity Ленина',
-                'address': 'ул. Ленина, д. 211',
-                'photo': '/static/img/salons/salon2.svg',
-                'works_at': 'с 10:00 до 20:00  без выходных',
-            },
-            {
-                'name': 'BeautyCity Красная',
-                'address': 'ул. Красная, д. 10',
-                'photo': '/static/img/salons/salon3.svg',
-                'works_at': 'с 10:00 до 20:00  без выходных',
-            },
-        ],
-        'services': [
-            {
-                'name': 'Дневной макияж',
-                'price': '1400',
-                'photo': '/static/img/services/service1.svg',
-            },
-            {
-                'name': 'Маникюр. Классический. Гель',
-                'price': '2000',
-                'photo': '/static/img/services/service2.svg',
-            },
-            {
-                'name': 'Укладка волос',
-                'price': '1500',
-                'photo': '/static/img/services/service3.svg',
-            },
-            {
-                'name': 'Укладка волос',
-                'price': '3000',
-                'photo': '/static/img/services/service4.svg',
-            },
-            {
-                'name': 'Педикюр',
-                'price': '1000',
-                'photo': '/static/img/services/service5.svg',
-            },
-            {
-                'name': 'Окрашивание волос',
-                'price': '5000',
-                'photo': '/static/img/services/service6.svg',
-            },
-        ],
-        'specialists': [
-            {
-                'name': 'Елизавета Лапина',
-                'reviews': 24,
-                'services': 'Ногтевой сервис, Макияж',
-                'experience': '3 г. 10 мес.',
-                'photo': f'/static/img/masters/master{i}.svg',
-            } for i in range(1, 7)
-        ],
+        'shops': shops,
+        'services': services,
+        'specialists': specialists,
         'reviews': [
             {
                 'name': 'Светлана Г.',
