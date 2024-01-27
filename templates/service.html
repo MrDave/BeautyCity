@@ -16,6 +16,7 @@
 	<link rel="stylesheet" href="{% static "/css/air-datepicker.css" %}">
 	<script src="{% static "/js/air-datepicker.js" %}"></script>
 	<link rel="stylesheet" href="{% static "/css/main.css" %}">
+	{{ data|json_script:"shops-list" }}
 </head>
 <body class="servicePage">
 	<section id="mobMenu">
@@ -107,13 +108,26 @@
 					<button class="service__btn btn">Запись по телефону</button>
 				</div>
 				
-				<form action="#" class="service__form">
-					<!-- <select name="selectSalon" id="" class="service__form_select">
-						<option value="" selected>(Выберите салон)</option>
-						<option value="salon1" >Салон 1</option>
+				<form action="serviceFinally" id="orderform" method="get" class="service__form">
+						<!-- <option value="salon1" >Салон 1</option>
 						<option value="salon2" >Салон 2</option>
-						<option value="salon3" >Салон 3</option>
-					</select> -->
+						<option value="salon3" >Салон 3</option> -->
+            <select name="shop" id="shop_selector" class="service__form_select">
+              <option value="" selected>(Выберите салон)</option>
+              {% for pk, name in shops %}
+                <option value="{{ pk }}" >{{ name }}</option>
+              {% endfor %}
+            </select>
+            <select name="service_type" id="service_type_selector" class="service__form_select">
+              <option value="" selected>(Выберите тип услуги)</option>
+            </select>
+            <select name="service" id="service_selector" class="service__form_select">
+              <option value="" selected>(Выберите услугу)</option>
+            </select>
+            <select name="specialist" id="specialist_selector" class="service__form_select">
+              <option value="" selected>(Выберите мастера)</option>
+            </select>
+          <!--
 					<div class="service__form_block service__salons">
 						<button class="accordion">(Выберите салон)</button>
 						<div class="panel">
@@ -152,7 +166,7 @@
 						
 
 					</div>
-					
+        -->
 				</form>
 			</div>
 		</div>
@@ -199,7 +213,7 @@
 				<div class="time__btns">
 					<div class="row">
 						<div class="col-md-12">
-							<button  class="time__btns_next">Далее</button>
+							<button  type="submit" form="orderform" class="time__btns_next">Далее</button>
 							<button  class="time__btns_home">На главную</button>
 						</div>
 					</div>

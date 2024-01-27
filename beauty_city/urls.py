@@ -29,4 +29,5 @@ urlpatterns = [
     path('serviceFinally', views.service_final, name='service_final'),
     path('notes', views.notes, name='notes'),
     path('manager', views.manager, name='manager'),
+    path('api', views.get_select_tag_payload, name='api'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
