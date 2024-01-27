@@ -1,4 +1,8 @@
 from django.shortcuts import render
+from django.db.models import Sum
+from django.contrib.auth.decorators import login_required
+from beauty_city_app.models import Appointment
+from django.utils import timezone
 
 
 def index(request):
@@ -190,5 +194,36 @@ def notes(request):
     return render(request, 'notes.html')
 
 
+@login_required
 def manager(request):
-    return render(request, 'admin.html')
+    current_month = timezone.now().month
+    current_year = timezone.now().year
+
+    total_appointment = Appointment.objects.filter(time_slot__date__month=current_month).count()
+    paid_appointment = Appointment.objects.filter(is_paid=True, time_slot__date__month=current_month).count()
+    paid_price = Appointment.objects.filter(is_paid=True, time_slot__date__month=current_month).aggregate(Sum('price'))['price__sum']
+    total_appointment_yearly = Appointment.objects.filter(time_slot__date__year=current_year).count()
+
+    if not total_appointment:
+        total_appointment = 0
+    if not paid_appointment:
+        paid_appointment = 0
+    if not paid_price:
+        paid_price = 0
+    if not total_appointment_yearly:
+        total_appointment_yearly = 0
+
+    if total_appointment:
+        paid_percentage = (paid_appointment / total_appointment) * 100
+    else:
+        paid_percentage = 0
+
+    context = {
+        'total_appointment': total_appointment,
+        'paid_appointment': paid_appointment,
+        'paid_percentage': paid_percentage,
+        'paid_price': paid_price,
+        'total_appointment_yearly': total_appointment_yearly,
+    }
+
+    return render(request, 'admin.html', context)
