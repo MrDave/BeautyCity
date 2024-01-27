@@ -108,20 +108,20 @@
 					<button class="service__btn btn">Запись по телефону</button>
 				</div>
 				
-				<form action="#" class="service__form">
+				<form action="serviceFinally" id="orderform" method="get" class="service__form">
 						<!-- <option value="salon1" >Салон 1</option>
 						<option value="salon2" >Салон 2</option>
 						<option value="salon3" >Салон 3</option> -->
-            <select name="selectSalon" id="chooseShops" class="service__form_select">
+            <select name="shop" id="shop" class="service__form_select">
               <option value="" selected>(Выберите салон)</option>
             </select>
-            <select name="selectServiceType" id="chooseServiceType" class="service__form_select">
+            <select name="service_type" id="service_type" class="service__form_select">
               <option value="" selected>(Выберите тип услуги)</option>
             </select>
-            <select name="selectService" id="chooseService" class="service__form_select">
+            <select name="service" id="service" class="service__form_select">
               <option value="" selected>(Выберите услугу)</option>
             </select>
-            <select name="selectSpecialist" id="chooseSpecialist" class="service__form_select">
+            <select name="specialist" id="specialist" class="service__form_select">
               <option value="" selected>(Выберите мастера)</option>
             </select>
           <!--
@@ -210,7 +210,7 @@
 				<div class="time__btns">
 					<div class="row">
 						<div class="col-md-12">
-							<button  class="time__btns_next">Далее</button>
+							<input  type="submit" form="orderform" class="time__btns_next">Далее</button>
 							<button  class="time__btns_home">На главную</button>
 						</div>
 					</div>

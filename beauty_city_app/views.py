@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 
 def index(request):
@@ -162,8 +165,7 @@ def service(request):
     }
     data = {
         'shops': {
-            '1': {
-                'name': 'BeautyCity Пушкинская ул. Пушкинская, д. 78А',
+            '1': {'name': 'BeautyCity Пушкинская ул. Пушкинская, д. 78А',
                 'service_types': {
                     '1': {
                         'name': 'Парикмахерские услуги',
@@ -330,3 +332,11 @@ def notes(request):
 
 def manager(request):
     return render(request, 'admin.html')
+
+
+@api_view(['GET', 'POST,'])
+def get_select_tag_payload(request):
+    print(f'{request.GET=}')
+    return Response({'status': 'ok',
+                     'tag_data': {'1': '2'}},
+                    status=status.HTTP_200_OK, )

@@ -417,7 +417,8 @@ $(document).ready(function() {
 		window.location.href = '/';
 	})
 
-	$(document).on('click', '.time__btns_next', function(){
+	// Button "Далее" on service.html
+/*	$(document).on('click', '.time__btns_next', function(){
 		new_location = 'serviceFinally?';
 		shop = $('.service__salons>button.accordion.selected').text();
 		service = $('.service__services>button.accordion.selected').text();
@@ -425,11 +426,10 @@ $(document).ready(function() {
 		new_location += (shop?'shop='+shop:'') + (service?'service='+service:'') + (specialist?'specialist='+specialist:'')
 		window.location.href = encodeURI(new_location);
 	})
-
+*/
 	function populate_select(select_id, select_data) {
 		let select_tag = $(select_id);
 		let new_html = ''
-		//$(select_id+' not([selected])').remove();
 		$(select_id+' option:not([selected])').remove()
 		Object.keys(select_data).forEach(key => {
 			new_html += "<option value='"+key+"' >"+select_data[key].name+"</option>";
@@ -438,16 +438,16 @@ $(document).ready(function() {
 	}
 
 	data = JSON.parse($('#shops-list').text());
-	populate_select('select#chooseShops', data.shops);
+	populate_select('select#shop', data.shops);
 
-	$('#chooseShops').on('change', function() {
+	$('#shop').on('change', function() {
 		id = $(this).val();
-		populate_select('select#chooseServiceType', data.shops[id].service_types);
+		populate_select('select#service_type', data.shops[id].service_types);
 	});
 
-	$('#chooseServiceType').on('change', function() {
+	$('#service_type').on('change', function() {
 		id = $(this).val();
-		populate_select('select#chooseService', data.shops[id].service_types[id].services);
+		populate_select('select#service', data.shops[id].service_types[id].services);
 	});
 
 })
