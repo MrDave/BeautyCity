@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import F, Sum
@@ -109,29 +109,40 @@ def service(request):
 
 def service_final(request):
     shop_id = request.GET.get('shop', '0')
-    #print(f'{shop_id=}')
+    service_id = request.GET.get('service', '0')
+    specialist_id = request.GET.get('specialist', '0')
+    selected_date = request.GET.get('date', '')
+    selected_time = request.GET.get('time', '')
+
     if shop_id == '0':
-        shop = {'0', 'Любой салон', ''}
+        shop = {'pk': '0', 'name': 'Любой салон', 'address': ''}
     else:
         shops_queryset = Shop.objects.values('pk', 'name', 'address', )
         shop = get_object_or_404(shops_queryset, pk=shop_id)
     services_queryset = Service.objects.values('pk', 'name', 'price', )
-    service = get_object_or_404(services_queryset,
-                                pk=request.GET.get('service'))
+    service = get_object_or_404(services_queryset, pk=service_id)
+    date_repr = '{:%d %b %Y}'.format(datetime
+                                     .strptime(selected_date, '%Y-%m-%d'))
+    if specialist_id == '0':
+        specialist = {'pk': '0', 'name': 'Любой специалист', 
+                      'photo': '/static/img/masters/avatar/all.svg', }
+    else:
+        specialist_queryset = Specialist.objects.values('pk', 'name',
+                                                        'profile_picture', )
+        specialist = get_object_or_404(specialist_queryset, pk=specialist_id)
     # Пример значений для заполнения шаблона
     context = {
         'id': '?????',
-        'shop': shop,
+        'shop':  shop,
         'service': service,
         'timeslot': {
-            'time': '16:30', 'date': '18 ноября',
+            'time': selected_time,
+            'date_repr': date_repr,
+            'date': selected_date,
         },
-        'specialist': {
-            'name': 'Елена Грибнова',
-            'photo': '/static/img/masters/avatar/vizajist1.svg'
-        }
+        'specialist': specialist,
     }
-    #print(context)
+    print(context)
     return render(request, 'serviceFinally.html', context)
 
 
