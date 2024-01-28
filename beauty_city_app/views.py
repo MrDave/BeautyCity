@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from beauty_city_app.models import Appointment, Service, Shop, Specialist
+from beauty_city_app.models import Appointment, Service, Shop, Specialist, Client
 
 
 def index(request):
@@ -85,7 +85,31 @@ def service_final(request):
 
 
 def notes(request):
-    return render(request, 'notes.html')
+    current_datetime = timezone.now()
+    username = request.GET.get('username')
+    phone = request.GET.get('phone')
+
+    client = get_object_or_404(Client, name=username, phone=phone)
+
+    all_appointments = client.appointments.all()
+    total_paid_amount = all_appointments.filter(is_paid=False).aggregate(Sum('price'))['price__sum'] or 0
+
+    upcoming_appointments = client.appointments.filter(
+        time_slot__date__gte=current_datetime.date()
+    ).order_by('time_slot__date', 'time_slot__time')
+
+    past_appointments = client.appointments.filter(
+        time_slot__date__lt=current_datetime.date()
+    ).order_by('-time_slot__date', '-time_slot__time')
+
+    context = {
+        'client': client,
+        'upcoming_appointments': upcoming_appointments,
+        'past_appointments': past_appointments,
+        'total_paid_amount': total_paid_amount,
+    }
+
+    return render(request, 'notes.html', context)
 
 
 @login_required
