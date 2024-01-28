@@ -102,24 +102,14 @@ def service(request):
     context = {
         'shops': shops,
         'service_types': service_types,
-        'timeslots': {
-            'morning': [
-                
-            ],
-            'day': [
-                '12:00', '12:30', '15:00', '16:30',
-            ],
-            'evening': [
-                '17:00', '18:30', '19:00',
-            ]
-        }
+        'timeslots': {'morning': [], 'day': [], 'evening': [], },
     }
     return render(request, 'service.html', context)
 
 
 def service_final(request):
     shop_id = request.GET.get('shop', '0')
-    print(f'{shop_id=}')
+    #print(f'{shop_id=}')
     if shop_id == '0':
         shop = {'0', 'Любой салон', ''}
     else:
@@ -141,7 +131,7 @@ def service_final(request):
             'photo': '/static/img/masters/avatar/vizajist1.svg'
         }
     }
-    print(context)
+    #print(context)
     return render(request, 'serviceFinally.html', context)
 
 
@@ -213,12 +203,10 @@ def get_specialists(request):
 
 @api_view(['GET', 'POST,'])
 def get_free_timeslots(request):
-    print(request.GET)
     shop_id = int(request.GET.get('shop', '0'))
     service_id = int(request.GET.get('service', '0'))
     specialist_id = int(request.GET.get('specialist', '0'))
     selected_date = request.GET.get('date', f'{date.today()}')
-    print(selected_date)
     free_slots = (TimeSlot.objects.filter(appointment__isnull=True)
                   .prefetch_related("specialist"))
     service_specialists = Specialist.objects.filter(services=service_id)

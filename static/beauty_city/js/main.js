@@ -138,40 +138,6 @@ $(document).ready(function() {
 				}
 	});
 
-	function get_timeslots() {
-		data = {
-			'shop': $('#shop_selector').val(),
-			'service': $('#service_selector').val(),
-			'specialist': $('#specialist_selector').val(),
-			'date': $('#datepickerHere').val(),
-		};
-		$.ajax({
-			url: 'api/timeslots',         /* Куда пойдет запрос */
-			method: 'get',             /* Метод передачи (post или get) */
-			dataType: 'json',          /* Тип данных в ответе (xml, json, script, html). */
-			data: data,     /* Параметры передаваемые в запросе. */
-			success: function(data){   /* функция которая будет выполнена после успешного запроса.  */
-				//alert(data.morning);   /* В переменной data содержится ответ от index.php. */
-				elements = $('div.time__elems_elem');
-				elements.empty();
-				day_parts = ['morning', 'afternoon', 'evening'];
-				day_parts.forEach((value, index) => {
-					console.log(data[value]);
-					data[value].forEach(slot=> {
-						new_timeslot = '<button type="button" class="time__elems_btn">'+slot+'</button>';
-						elements.eq(index).append(new_timeslot);
-					});
-				});
-				$('.time__elems_btn').click(function(e) {
-					e.preventDefault();
-					$('.time__elems_btn').removeClass('active');
-					$(this).addClass('active');
-				});
-			}
-		});
-	}
-
-
 	var acc = document.getElementsByClassName("accordion");
 	var i;
 
@@ -186,8 +152,6 @@ $(document).ready(function() {
 	    	 panel.addClass('active')
 	  });
 	}
-
-
 
 
 	$('.accordion__block_item').click(function(e) {
@@ -281,32 +245,45 @@ $(document).ready(function() {
 */
 	// BeautyCity team features
 
-	// Hid/show datetime picker section
+	function is_service_data_valid(){
+		return ($('#shop_selector').val() 
+			&& $('#service_selector').val()
+			&& $('#shop_selector').val()
+			&& $('#shop_selector').val()
+			&& $('#datepickerHere').val()
+			&& $('#datepickerHere').val()
+			&& $('.time__elems_btn.active').text())
+	}
+
+
+	// Hide/show datetime picker section
 	$(document).on('click', '.servicePage', function() {
-		if ($('#specialist_selector').val()) {
+		if (!$('#specialist_selector').val()) {
 			$('#time').show();
 		} else {
 			$('#time').hide();
 		}
-		if($('#shop_selector').val() && $('#service_selector').val()) {
+		if (is_service_data_valid()) {
 			$('.time__btns_next').addClass('active')
+		} else {
+			$('.time__btns_next').removeClass('active')
 		}
 	});
+
+
+	// Button "Далее" on service.html
+	$('form#orderform').on('submit',  function(evt){
+		if (!is_service_data_valid()) {
+			alert('Заполните все поля необходимые для заказа!')
+			evt.preventDefault();
+		}
+	})
+
 
 	$(document).on('click', '.time__btns_home', function(){
 		window.location.href = '/';
 	});
 
-	// Button "Далее" on service.html
-/*	$(document).on('click', '.time__btns_next', function(){
-		new_location = 'serviceFinally?';
-		shop = $('.service__salons>button.accordion.selected').text();
-		service = $('.service__services>button.accordion.selected').text();
-		specialist = $('.service__masters>button.accordion.selected').text();
-		new_location += (shop?'shop='+shop:'') + (service?'service='+service:'') + (specialist?'specialist='+specialist:'')
-		window.location.href = encodeURI(new_location);
-	})
-*/
 
 	function populate_select(select_id, select_data) {
 		let select_tag = $(select_id);
@@ -376,5 +353,42 @@ $(document).ready(function() {
 			});
 		}
 	});
+
+
+	function get_timeslots() {
+		date = $('#datepickerHere').val();
+		data = {
+			'shop': $('#shop_selector').val(),
+			'service': $('#service_selector').val(),
+			'specialist': $('#specialist_selector').val(),
+			'date': date,
+		};
+		if (date) {
+			$.ajax({
+				url: 'api/timeslots',         /* Куда пойдет запрос */
+				method: 'get',             /* Метод передачи (post или get) */
+				dataType: 'json',          /* Тип данных в ответе (xml, json, script, html). */
+				data: data,     /* Параметры передаваемые в запросе. */
+				success: function(data){   /* функция которая будет выполнена после успешного запроса.  */
+					//alert(data.morning);   /* В переменной data содержится ответ от index.php. */
+					elements = $('div.time__elems_elem');
+					elements.empty();
+					day_parts = ['morning', 'afternoon', 'evening'];
+					day_parts.forEach((value, index) => {
+						data[value].forEach(slot=> {
+							new_timeslot = '<button type="button" class="time__elems_btn">'+slot.slice(0,-3)+'</button>';
+							elements.eq(index).append(new_timeslot);
+						});
+					});
+					$('.time__elems_btn').click(function(e) {
+						e.preventDefault();
+						$('.time__elems_btn').removeClass('active');
+						$(this).addClass('active');
+					});
+				}
+			});
+		}
+	}
+
 
 })
