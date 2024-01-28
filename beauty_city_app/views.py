@@ -1,5 +1,7 @@
+from datetime import date
+
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum, F
+from django.db.models import F, Sum
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from rest_framework import status
@@ -102,7 +104,7 @@ def service(request):
         'service_types': service_types,
         'timeslots': {
             'morning': [
-                '10:00', '10:30',
+                
             ],
             'day': [
                 '12:00', '12:30', '15:00', '16:30',
@@ -210,5 +212,28 @@ def get_specialists(request):
 
 
 @api_view(['GET', 'POST,'])
-def get_free_slots(request):
-    pass
+def get_free_timeslots(request):
+    print(request.GET)
+    shop_id = int(request.GET.get('shop', '0'))
+    service_id = int(request.GET.get('service', '0'))
+    specialist_id = int(request.GET.get('specialist', '0'))
+    selected_date = request.GET.get('date', f'{date.today()}')
+    print(selected_date)
+    free_slots = (TimeSlot.objects.filter(appointment__isnull=True)
+                  .prefetch_related("specialist"))
+    service_specialists = Specialist.objects.filter(services=service_id)
+    if shop_id:
+        free_slots = free_slots.filter(shop__id=shop_id)
+    if not specialist_id:
+        free_slots = free_slots.filter(specialist__in=service_specialists)
+    else:
+        free_slots = free_slots.filter(specialist__id=specialist_id)
+    morning_slots = free_slots.filter(date=selected_date).filter(time__lt="12:00").values_list('time', flat=True).distinct()
+    afternoon_slots = free_slots.filter(date=selected_date).filter(time__range=("12:00", "16:59")).values_list('time', flat=True).distinct()
+    evening_slots = free_slots.filter(date=selected_date).filter(time__gte="17:00").values_list('time', flat=True).distinct()
+    context = {
+        "morning": morning_slots,
+        "afternoon": afternoon_slots,
+        "evening": evening_slots,
+    }
+    return Response(context)

@@ -29,6 +29,7 @@ urlpatterns = [
     path('serviceFinally', views.service_final, name='service_final'),
     path('notes', views.notes, name='notes'),
     path('manager', views.manager, name='manager'),
-    path('api/services', views.get_services, name='api'),
-    path('api/specialists', views.get_specialists, name='api'),
+    path('api/services', views.get_services, ),
+    path('api/specialists', views.get_specialists, ),
+    path('api/timeslots', views.get_free_timeslots, ),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
