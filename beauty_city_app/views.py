@@ -1,7 +1,7 @@
 from datetime import date, datetime
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import F, Sum
+from django.db.models import Sum
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from rest_framework import status
@@ -227,9 +227,15 @@ def get_free_timeslots(request):
         free_slots = free_slots.filter(specialist__in=service_specialists)
     else:
         free_slots = free_slots.filter(specialist__id=specialist_id)
-    morning_slots = free_slots.filter(date=selected_date).filter(time__lt="12:00").values_list('time', flat=True).distinct()
-    afternoon_slots = free_slots.filter(date=selected_date).filter(time__range=("12:00", "16:59")).values_list('time', flat=True).distinct()
-    evening_slots = free_slots.filter(date=selected_date).filter(time__gte="17:00").values_list('time', flat=True).distinct()
+    morning_slots = (free_slots.filter(date=selected_date)
+                     .filter(time__lt="12:00").values_list('time', flat=True)
+                     .distinct())
+    afternoon_slots = (free_slots.filter(date=selected_date)
+                       .filter(time__range=("12:00", "16:59"))
+                       .values_list('time', flat=True).distinct())
+    evening_slots = (free_slots.filter(date=selected_date)
+                     .filter(time__gte="17:00").values_list('time', flat=True)
+                     .distinct())
     context = {
         "morning": morning_slots,
         "afternoon": afternoon_slots,
