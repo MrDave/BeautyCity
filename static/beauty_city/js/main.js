@@ -258,7 +258,7 @@ $(document).ready(function() {
 
 	// Hide/show datetime picker section
 	$(document).on('click', '.servicePage', function() {
-		if (!$('#specialist_selector').val()) {
+		if ($('#specialist_selector').val()) {
 			$('#time').show();
 		} else {
 			$('#time').hide();
@@ -276,6 +276,8 @@ $(document).ready(function() {
 		if (!is_service_data_valid()) {
 			alert('Заполните все поля необходимые для заказа!')
 			evt.preventDefault();
+		} else {
+			$('#timefields').val($('.time__elems_btn.active').text());
 		}
 	})
 
@@ -289,7 +291,6 @@ $(document).ready(function() {
 		let select_tag = $(select_id);
 		let new_html = ''
 		$(select_id+' option:not([selected])').remove()
-		console.log(select_data)
 		select_data.forEach(pair => {
 			new_html += "<option value='" + pair[0] + "' >" + pair[1] + "</option>";
 		});
