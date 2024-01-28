@@ -422,6 +422,11 @@ $(document).ready(function() {
 */
 	// BeautyCity team features
 	$(document).on('click', '.servicePage', function() {
+		if ($('#specialist_selector').val()) {
+			$('#time').show();
+		} else {
+			$('#time').hide();
+		}
 		if($('#shop_selector').val() && $('#service_selector').val()) {
 			$('.time__btns_next').addClass('active')
 		}
@@ -446,6 +451,7 @@ $(document).ready(function() {
 		let select_tag = $(select_id);
 		let new_html = ''
 		$(select_id+' option:not([selected])').remove()
+		console.log(select_data)
 		select_data.forEach(pair => {
 			new_html += "<option value='" + pair[0] + "' >" + pair[1] + "</option>";
 		});
@@ -453,16 +459,19 @@ $(document).ready(function() {
 	}
 
 	$('#shop_selector').on('change', function() {
-		id = $(this).val()
-		data = {'shop': id};
+		id = $('#service_selector').val(),
+		data = {
+			'shop': $(this).val(),
+			'service': id,
+		};
 		if (id) {
 			$.ajax({
-				url: 'api',         /* Куда пойдет запрос */
+				url: 'api/specialists',         /* Куда пойдет запрос */
 				method: 'get',             /* Метод передачи (post или get) */
 				dataType: 'json',          /* Тип данных в ответе (xml, json, script, html). */
 				data: data,     /* Параметры передаваемые в запросе. */
 				success: function(data){   /* функция которая будет выполнена после успешного запроса.  */
-					populate_select('#service_type_selector', data.service_types);            /* В переменной data содержится ответ от index.php. */
+					populate_select('#specialist_selector', data.specialists);            /* В переменной data содержится ответ от index.php. */
 				}
 			});
 		}
@@ -477,7 +486,7 @@ $(document).ready(function() {
 		};
 		if (id) {
 			$.ajax({
-				url: 'api',         /* Куда пойдет запрос */
+				url: 'api/services',         /* Куда пойдет запрос */
 				method: 'get',             /* Метод передачи (post или get) */
 				dataType: 'json',          /* Тип данных в ответе (xml, json, script, html). */
 				data: data,     /* Параметры передаваемые в запросе. */
@@ -492,12 +501,11 @@ $(document).ready(function() {
 		id = $(this).val();
 		data = {
 			'shop': $('#shop_selector').val(),
-			'service_type': $('#service_type_selector').val(),
 			'service': id,
 		};
 		if (id) {
 			$.ajax({
-				url: 'api',         /* Куда пойдет запрос */
+				url: 'api/specialists',         /* Куда пойдет запрос */
 				method: 'get',             /* Метод передачи (post или get) */
 				dataType: 'json',          /* Тип данных в ответе (xml, json, script, html). */
 				data: data,     /* Параметры передаваемые в запросе. */

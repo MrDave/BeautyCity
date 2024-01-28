@@ -1,14 +1,13 @@
-from django.shortcuts import get_object_or_404, render
-from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
-from beauty_city_app.models import Appointment
+from django.db.models import Sum, F
+from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
-
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from beauty_city_app.models import Appointment, Service, Shop, Specialist
+from beauty_city_app.models import (Appointment, Service, Shop, Specialist,
+                                    TimeSlot)
 
 
 def index(request):
@@ -96,9 +95,11 @@ def service(request):
     shops = [(pk, f'{name} {address}') for pk, name, address
              in Shop.objects.values_list('pk', 'name', 'address')]
     shops.insert(0, ('0', 'Любой салон'))
+    service_types = list(map(list, Service.SERVICE_TYPES))
     # Заглушка для выбора таймслотов
     context = {
         'shops': shops,
+        'service_types': service_types,
         'timeslots': {
             'morning': [
                 '10:00', '10:30',
@@ -115,8 +116,13 @@ def service(request):
 
 
 def service_final(request):
-    shops_queryset = Shop.objects.values('pk', 'name', 'address', )
-    shop = get_object_or_404(shops_queryset, pk=request.GET.get('shop'))
+    shop_id = request.GET.get('shop', '0')
+    print(f'{shop_id=}')
+    if shop_id == '0':
+        shop = {'0', 'Любой салон', ''}
+    else:
+        shops_queryset = Shop.objects.values('pk', 'name', 'address', )
+        shop = get_object_or_404(shops_queryset, pk=shop_id)
     services_queryset = Service.objects.values('pk', 'name', 'price', )
     service = get_object_or_404(services_queryset,
                                 pk=request.GET.get('service'))
@@ -174,32 +180,35 @@ def manager(request):
     }
 
     return render(request, 'admin.html', context)
-    
-    
-@api_view(['GET', 'POST,'])
-def get_select_tag_payload(request):
-    print(f'{request.GET=}')
 
-    shop = request.GET.get('shop')
-    if not shop:
+
+@api_view(['GET', 'POST,'])
+def get_services(request):
+    service_type = request.GET.get('service_type', '')
+    if service_type == '':
         return Response(status=status.HTTP_400_BAD_REQUEST)
-    service_type = request.GET.get('service_type')
-    if not service_type:
-        return Response({'service_types':
-                         list(map(list, Service.SERVICE_TYPES))})
-    service = request.GET.get('service')
-    if not service:
-        return Response({'services':
-                         list(map(list, Service.objects
-                                  .filter(service_type=service_type)
-                                  .values_list('pk', 'name')))})
-    specialist = request.GET.get('specialist')
-    if not specialist:
-        return Response({
-            'specialists': [{
-                'pk': '4', 'name': 'Мария Максимова',
-            }, {
-                'pk': '5', 'name': 'Анастасия Сергеева',
-            },]
-        })
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+    return Response({'services': list(map(list, Service.objects
+                                 .filter(service_type=service_type)
+                                 .values_list('pk', 'name')))})
+
+
+@api_view(['GET', 'POST,'])
+def get_specialists(request):
+    shop = request.GET.get('shop', '')
+    service = request.GET.get('service', '')
+    free_slots = (TimeSlot.objects.filter(appointment__isnull=True)
+                  .prefetch_related("specialist"))
+    service_specialists = Specialist.objects.filter(services=service)
+    if shop != '0':
+        free_slots = free_slots.filter(shop__id=shop)
+    specialists = (free_slots.filter(specialist__in=service_specialists)
+                             .distinct()
+                             .values_list('specialist', 'specialist__name'))
+    specialists_serialized = list(map(list, specialists))
+    specialists_serialized.insert(0, [0, 'Любой специалист'])
+    return Response({'specialists': specialists_serialized})
+
+
+@api_view(['GET', 'POST,'])
+def get_free_slots(request):
+    pass
