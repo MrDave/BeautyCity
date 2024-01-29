@@ -68,15 +68,15 @@ class Specialist(models.Model):
 
 class TimeSlot(models.Model):
     TIME_CHOICES = [
-        (datetime.time(10, 00), '10:00'),
-        (datetime.time(11, 00), '11:00'),
-        (datetime.time(12, 00), '12:00'),
-        (datetime.time(13, 00), '13:00'),
-        (datetime.time(14, 00), '14:00'),
-        (datetime.time(15, 00), '15:00'),
-        (datetime.time(16, 00), '16:00'),
-        (datetime.time(17, 00), '17:00'),
-        (datetime.time(18, 00), '18:00'),
+        (datetime.time(10, 00), "10:00"),
+        (datetime.time(11, 00), "11:00"),
+        (datetime.time(12, 00), "12:00"),
+        (datetime.time(13, 00), "13:00"),
+        (datetime.time(14, 00), "14:00"),
+        (datetime.time(15, 00), "15:00"),
+        (datetime.time(16, 00), "16:00"),
+        (datetime.time(17, 00), "17:00"),
+        (datetime.time(18, 00), "18:00"),
     ]
     specialist = models.ForeignKey(
         Specialist,
