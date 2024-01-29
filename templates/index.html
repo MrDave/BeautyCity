@@ -458,5 +458,15 @@
 	<script src="{% static "/js/air-datepicker.js" %}"></script>
 	<script src="{% static "/js/jquery.arcticmodal-0.3.min.js" %}"></script>
 	<script src="{% static "/js/main.js" %}"></script>
+	<!-- Виджет согласия с куки -->
+	<script charset="utf-8" type="text/javascript" src="{% static "/js/agreement.js" %}"></script>
+	<script charset="utf-8" type="text/javascript">
+		document.addEventListener('DOMContentLoaded', function(){
+			getCookieNotification({
+				siteName:'BeautyCity ',
+				personalInformationLink:'/personal/',
+				color:'#FFCD07'});});
+	</script>
+	<!-- Виджет согласия с куки -->
 </body>
 </html>
