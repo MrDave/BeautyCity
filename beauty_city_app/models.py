@@ -41,7 +41,7 @@ class Service(models.Model):
     name = models.CharField(verbose_name="название", max_length=100)
     service_type = models.CharField(verbose_name="тип услуги", max_length=2, choices=SERVICE_TYPES, db_index=True)
     shop = models.ManyToManyField(Shop, verbose_name="салоны", related_name="services")
-    image = models.ImageField(verbose_name="изображение", upload_to="service_images/", null=True, blank=True),
+    image = models.ImageField(verbose_name="изображение", upload_to="service_images/", null=True, blank=True)
     price = models.IntegerField(verbose_name="стоимость", validators=[MinValueValidator(0)])
     is_archived = models.BooleanField()
 
@@ -68,15 +68,15 @@ class Specialist(models.Model):
 
 class TimeSlot(models.Model):
     TIME_CHOICES = [
-        (datetime.time(10, 00), "10:00"),
-        (datetime.time(11, 00), "11:00"),
-        (datetime.time(12, 00), "12:00"),
-        (datetime.time(13, 00), "13:00"),
-        (datetime.time(14, 00), "14:00"),
-        (datetime.time(15, 00), "15:00"),
-        (datetime.time(16, 00), "16:00"),
-        (datetime.time(17, 00), "17:00"),
-        (datetime.time(18, 00), "18:00"),
+        (datetime.time(10, 00), '10:00'),
+        (datetime.time(11, 00), '11:00'),
+        (datetime.time(12, 00), '12:00'),
+        (datetime.time(13, 00), '13:00'),
+        (datetime.time(14, 00), '14:00'),
+        (datetime.time(15, 00), '15:00'),
+        (datetime.time(16, 00), '16:00'),
+        (datetime.time(17, 00), '17:00'),
+        (datetime.time(18, 00), '18:00'),
     ]
     specialist = models.ForeignKey(
         Specialist,
@@ -127,6 +127,7 @@ class Review(models.Model):
         related_name="reviews"
     )
     date = models.DateField(verbose_name="дата посещения")
+    text = models.TextField(verbose_name="отзыв", blank=True)
 
     class Meta:
         verbose_name = "отзыв"
