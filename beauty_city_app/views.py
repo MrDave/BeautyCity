@@ -99,16 +99,42 @@ def notes(request):
     username = request.GET.get('username')
     phone = request.GET.get('phone')
 
-    client = get_object_or_404(Client, name=username, phone=phone)
+    shop_id = int(request.GET.get('shop'))
+    specialist_id = int(request.GET.get('specialist'))
+    service_id = int(request.GET.get('service'))
 
-    all_appointments = client.appointments.all()
-    total_paid_amount = all_appointments.filter(is_paid=False).aggregate(Sum('price'))['price__sum'] or 0
+    slot_date = request.GET.get('date')
+    slot_time = request.GET.get('time')
 
-    upcoming_appointments = client.appointments.filter(
+    # client = get_object_or_404(Client, name=username, phone=phone)
+    client, created = Client.objects.get_or_create(
+        phone=phone,
+        defaults={
+            "name": username
+        }
+    )
+    if specialist_id:
+        time_slot = TimeSlot.objects.get(specialist=specialist_id, date=slot_date, time=slot_time)
+    elif shop_id:
+        time_slot = TimeSlot.objects.filter(shop=shop_id, date=slot_date, time=slot_time).first()
+    else:
+        time_slot = TimeSlot.objects.filter(date=slot_date, time=slot_time).first()
+
+    beauty_service = Service.objects.get(id=service_id)
+    new_appointment = Appointment.objects.create(
+        client=client,
+        time_slot=time_slot,
+        service=beauty_service,
+        price=beauty_service.price
+    )
+    appointments = Appointment.objects.filter(client=client)
+    total_to_pay_amount = appointments.filter(is_paid=False).aggregate(Sum('price'))['price__sum'] or 0
+
+    upcoming_appointments = appointments.filter(
         time_slot__date__gte=current_datetime.date()
     ).order_by('time_slot__date', 'time_slot__time')
 
-    past_appointments = client.appointments.filter(
+    past_appointments = appointments.filter(
         time_slot__date__lt=current_datetime.date()
     ).order_by('-time_slot__date', '-time_slot__time')
 
@@ -116,7 +142,7 @@ def notes(request):
         'client': client,
         'upcoming_appointments': upcoming_appointments,
         'past_appointments': past_appointments,
-        'total_paid_amount': total_paid_amount,
+        'total_paid_amount': total_to_pay_amount,
     }
 
     return render(request, 'notes.html', context)
@@ -155,6 +181,7 @@ def manager(request):
     }
 
     return render(request, 'admin.html', context)
+
 
 @api_view(['GET', 'POST,'])
 def get_services(request):
