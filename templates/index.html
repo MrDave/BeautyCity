@@ -270,7 +270,7 @@
           {% for review in reviews %}
 					<div class="col-md-3">
 						<div class="reviews__block">
-							<div class="reviews__name">{{ review.name }}</div>
+							<div class="reviews__name">{{ review.client.name }}</div>
 							<img src="{% static "/img/rating.svg" %}" alt="rating" class="reviews__header_rating">
 							<div class="reviews__block_text">
 								{{ review.text }}

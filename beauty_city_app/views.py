@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from beauty_city_app.models import Appointment, Service, Shop, Specialist, Client, TimeSlot
+from beauty_city_app.models import Appointment, Service, Shop, Specialist, Client, TimeSlot, Review
 
 
 def index(request):
@@ -17,24 +17,13 @@ def index(request):
     shops = Shop.objects.all()
     services = Service.objects.all()
     specialists = Specialist.objects.annotate(review_count=Count('reviews'))
+    reviews = Review.objects.all()
 
     context = {
         'shops': shops,
         'services': services,
         'specialists': specialists,
-        'reviews': [
-            {
-                'name': 'Светлана Г.',
-                'text': 'Отличное место для красоты, очень доброжелательный и отзывчивый персонал, девочки заботливые, аккуратные и большие профессионалы. Посещаю салон с самого начала, но он не теряет своей привлекательности, как в обслуживании.',
-                'date': '12 ноября 2022',
-            } if i % 2 else
-            {
-                'name': 'Ольга Н.',
-                'text': 'Мне всё лень было отзыв писать, но вот "руки дошли". Несколько раз здесь стриглась, мастера звали, кажется, Катя. Все было отлично, приятная молодая женщина и по стрижке вопросов не было)',
-                'date': '5 ноября 2022',
-            }
-            for i in range(8)
-        ]
+        'reviews': reviews,
     }
     return render(request, 'index.html', context)
 
