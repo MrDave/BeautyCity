@@ -137,7 +137,11 @@
           {% for shop in shops %}
 					<div class="col-6 col-md-4 col-lg-4 col-xl-3">
 						<div class="salons__block">
-							<img src="{{ shop.photo }}" alt="salon" class="salons__block_img">
+							{% if shop.image %}
+								<img src="{{ shop.image.url }}" alt="salon" class="salons__block_img">
+							{% else %}
+								<img src="{% static "/img/no_image.jpg" %}" alt="Default 'no image' image" class="salons__block_img">
+							{% endif %}
 							<div class="salons__elems">
 								<div class="block__title salons__elems_title">{{ shop.name }}</div>
 								<div class="salons__elems_light">{{ shop.address }}</div>
@@ -173,12 +177,16 @@
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="row servicesSlider">
           {% for service in services %}
 					<div class="col-md-3">
 						<div class="cardBlock services__block">
-							<img src="{{ service.photo }}" alt="service" class="services__block_img">
+							{% if service.image %}
+								<img src="{{ service.image.url }}" alt="service" class="services__block_img">
+							{% else %}
+								<img src="{% static "/img/no_image.jpg" %}" alt="Default 'no image' image" class="services__block_img">
+							{% endif %}
 							<div class="services__elems">
 								<div class="services__elems_title">{{ service.name }}</div>
 								<div class="services__elems_light">{{ service.price }} ₽</div>
@@ -204,22 +212,26 @@
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="row mastersSlider">
           {% for specialist in specialists %}
 					<div class="col-md-3">
 						<div class="cardBlock masters__block">
 							<div class="masters__header fic">
-								<img src="{{ specialist.photo }}" alt="master" class="masters__header_img">
+								{% if specialist.profile_picture %}
+									<img src="{{ specialist.profile_picture.url }}" alt="master" class="masters__header_img">
+								{% else %}
+									<img src="{% static "/img/masters/avatar/all.svg" %}" alt="Default 'no profile' image" class="masters__header_img">
+								{% endif %}
 								<div class="masters__header_elmes">
 									<div class="masters__header_name">{{ specialist.name }}</div>
 									<img src="{% static "/img/rating.svg" %}" alt="rating" class="masters__header_rating">
-									<div class="masters__header_reviews">{{ specialist.reviews }}</div>
+									<div class="masters__header_reviews">{{ specialist.review_count }}</div>
 								</div>
 							</div>
 							<div class="masters__main">
 								<div class="masters__main_speciality">СПЕЦИАЛЬНОСТЬ:</div>
-								<div class="masters__main_intro">{{ specialist.services }}</div>
+								<div class="masters__main_intro">{{  specialist.services.all.first.get_service_type_display }}</div>
 							</div>
 							<div class="masters__footer fic">
 								<div class="masters__footer_block">

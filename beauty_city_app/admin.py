@@ -1,5 +1,5 @@
 from django.contrib import admin
-from beauty_city_app.models import Shop, Client, Service, Specialist, TimeSlot, Appointment
+from beauty_city_app.models import Shop, Client, Service, Specialist, TimeSlot, Appointment, Review
 
 
 @admin.register(Shop)
@@ -28,4 +28,8 @@ class TimeSlotAdmin(admin.ModelAdmin):
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
     pass

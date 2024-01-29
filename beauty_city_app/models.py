@@ -41,7 +41,7 @@ class Service(models.Model):
     name = models.CharField(verbose_name="название", max_length=100)
     service_type = models.CharField(verbose_name="тип услуги", max_length=2, choices=SERVICE_TYPES, db_index=True)
     shop = models.ManyToManyField(Shop, verbose_name="салоны", related_name="services")
-    image = models.ImageField(verbose_name="изображение", upload_to="service_images/", null=True, blank=True),
+    image = models.ImageField(verbose_name="изображение", upload_to="service_images/", null=True, blank=True)
     price = models.IntegerField(verbose_name="стоимость", validators=[MinValueValidator(0)])
     is_archived = models.BooleanField()
 
@@ -127,6 +127,7 @@ class Review(models.Model):
         related_name="reviews"
     )
     date = models.DateField(verbose_name="дата посещения")
+    text = models.TextField(verbose_name="отзыв", blank=True)
 
     class Meta:
         verbose_name = "отзыв"
