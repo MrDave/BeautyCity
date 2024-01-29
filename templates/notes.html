@@ -219,7 +219,11 @@
 						<div class="notes__main_title">ПРЕДСТОЯЩИЕ</div>
 						{% for appointment in upcoming_appointments %}
 							<div class="notes__main_block">
-							<img src="{{ appointment.service.image.url }}" alt="service1" class="notes__main_block__img">
+							{% if appointment.service.image %}
+								<img src="{{ appointment.service.image.url }}" alt="service1" class="notes__main_block__img">
+							{% else %}
+								<img src="{% static "/img/no_image.jpg" %}" alt="Default 'no image' image" class="notes__main_block__img">
+							{% endif %}
 							<div class="notes__main_block__elems">
 								<div class="notes__main_block__header fic">
 									<div class="notes__main_block__header__itesm fic">
