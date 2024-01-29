@@ -177,9 +177,10 @@ def get_services(request):
     service_type = request.GET.get('service_type', '')
     if service_type == '':
         return Response(status=status.HTTP_400_BAD_REQUEST)
-    return Response({'services': list(map(list, Service.objects
-                                 .filter(service_type=service_type)
-                                 .values_list('pk', 'name')))})
+    services =  (Service.objects.filter(service_type=service_type)
+                        .values_list('pk', 'name', 'price', ))
+    return Response({'services': [[pk, f'{name} - {price} р.']
+                                   for pk, name, price in services]})
 
 
 @api_view(['GET', 'POST,'])
