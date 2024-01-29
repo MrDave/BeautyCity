@@ -73,9 +73,11 @@ def service_final(request):
         specialist = {'pk': '0', 'name': 'Любой специалист',
                       'photo': '/static/img/masters/avatar/all.svg', }
     else:
-        specialist_queryset = Specialist.objects.values('pk', 'name',
-                                                        'profile_picture', )
-        specialist = get_object_or_404(specialist_queryset, pk=specialist_id)
+        selected_specialist = get_object_or_404(Specialist, pk=specialist_id)
+        specialist = {'pk': selected_specialist.pk,
+                      'name': selected_specialist.name,
+                      'photo': selected_specialist.profile_picture.url, }
+
     # Пример значений для заполнения шаблона
     context = {
         'id': '?????',
