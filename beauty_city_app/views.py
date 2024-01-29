@@ -42,7 +42,8 @@ def index(request):
 
 def service(request):
     shops = [(pk, f'{name} {address}') for pk, name, address
-             in Shop.objects.values_list('id', 'name', 'address')]
+             in Shop.objects.values_list('pk', 'name', 'address')]
+    shops.insert(0, ('0', 'Любой салон'))
     # Заглушка для выбора таймслотов
     context = {
         'shops': shops,

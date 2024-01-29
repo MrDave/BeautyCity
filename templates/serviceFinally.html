@@ -125,12 +125,15 @@
 									</div>
 									<div class="serviceFinally__form_content__block fic">
 										<div class="serviceFinally__form_content__items fic">
+											<input type="hidden" name="specialist" value="{{ specialist.pk }}" />
 										  	<img src="{{ specialist.photo }}" alt="avatar" class="accordion__block_img">
 										  	<div class="accordion__block_master">{{ specialist.name }}</div>
 									    </div>
 									    <div class="serviceFinally__form_content__item fic">
-											<div class="serviceFinally__form_content__time">{{ service.time }}</div>
-											<div class="serviceFinally__form_content__date">{{ service.date }}</div>
+											<input type="hidden" name="date" value="{{ timeslot.date }}" />
+											<input type="hidden" name="time" value="{{ timeslot.time }}" />
+											<div class="serviceFinally__form_content__time">{{ timeslot.time }}</div>
+											<div class="serviceFinally__form_content__date">{{ timeslot.date_repr }}</div>
 										</div>
 									</div>
 									
@@ -150,7 +153,7 @@
 									<span class="contacts__form_checkboxBlock__intro">Я согласен(а) с политикой конфидециоальности</span>
 								</div>
 								<button type="submit" class="serviceFinallys__form_btn">Записаться</button>
-								<button class="serviceFinallys__form_back" onclick="window.history.back()">Назад</button>
+								<button type="button" class="serviceFinallys__form_back" onclick="window.history.back()">Назад</button>
 							</div>
 						</form>	
 					</div>

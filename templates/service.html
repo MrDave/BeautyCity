@@ -16,12 +16,11 @@
 	<link rel="stylesheet" href="{% static "/css/air-datepicker.css" %}">
 	<script src="{% static "/js/air-datepicker.js" %}"></script>
 	<link rel="stylesheet" href="{% static "/css/main.css" %}">
-	{{ data|json_script:"shops-list" }}
 </head>
 <body class="servicePage">
 	<section id="mobMenu">
-			<div class="mobMenu">
-				<div class="container">
+		<div class="mobMenu">
+			<div class="container">
 				<div class="mobMenu__header">
 					<div class="row">
 						<div class="col-4 col-md-3">
@@ -83,21 +82,19 @@
 					</div>
 					<div class="col-2 col-md-2 col-lg-3">
 						<div class="header__block">
-						<button class="header__block_btn">Перезвоните мне</button>
-						<div class="header__block_auth">
-							<img src="{% static "/img/acc.svg" %}" alt="account" class="header__account_img">
-							<span class="header__block_auth__intro">Войти</span>
-						</div>
-					</div>
+              <button class="header__block_btn">Перезвоните мне</button>
+              <div class="header__block_auth">
+                <img src="{% static "/img/acc.svg" %}" alt="account" class="header__account_img">
+                <span class="header__block_auth__intro">Войти</span>
+              </div>
+            </div>
 					</div>
 				</div>
-				
-				
-				
 			</div>
 		</div>
 	</header>
-	<section id="service">
+  <form action="serviceFinally" id="orderform" method="get" class="service__form">
+  <section id="service">
 		<div class="container">
 			<div class="service">
 				<div class="breadCrumbs">
@@ -105,86 +102,50 @@
 				</div>
 				<div class="service__block">
 					<h1 class="service__title">Запись на услугу</h1>
-					<button class="service__btn btn">Запись по телефону</button>
+					<button type="button" class="service__btn btn">Запись по телефону</button>
 				</div>
 				
-				<form action="serviceFinally" id="orderform" method="get" class="service__form">
-						<!-- <option value="salon1" >Салон 1</option>
+        <div>
+						<!--<option value="" selected>(Выберите салон)</option>
+            <option value="salon1" >Салон 1</option>
 						<option value="salon2" >Салон 2</option>
 						<option value="salon3" >Салон 3</option> -->
-            <select name="shop" id="shop_selector" class="service__form_select">
-              <option value="" selected>(Выберите салон)</option>
-              {% for pk, name in shops %}
-                <option value="{{ pk }}" >{{ name }}</option>
-              {% endfor %}
-            </select>
-            <select name="service_type" id="service_type_selector" class="service__form_select">
-              <option value="" selected>(Выберите тип услуги)</option>
-            </select>
-            <select name="service" id="service_selector" class="service__form_select">
-              <option value="" selected>(Выберите услугу)</option>
-            </select>
-            <select name="specialist" id="specialist_selector" class="service__form_select">
-              <option value="" selected>(Выберите мастера)</option>
-            </select>
-          <!--
-					<div class="service__form_block service__salons">
-						<button class="accordion">(Выберите салон)</button>
-						<div class="panel">
-              {% for shop in shops %}
-                <div class="accordion__block fic">
-                  <div class="accordion__block_intro">{{ shop.name }}</div>
-                  <div class="accordion__block_address">{{ shop.address }}</div>
-                </div>
-              {% endfor %}
-						</div>
-					</div>
-					<div class="service__form_block service__services">
-						<button class="accordion">(Выберите услугу)</button>
-						<div class="panel">
-              {% for service_type in service_types %}
-                <button class="accordion">{{ service_type.name }}</button>
-                <div class="panel">
-                    <div class="accordion__block_items">
-                      {% for service in service_type.services %}
-                        <div class="accordion__block_item fic">
-                          <div class="accordion__block_item_intro">{{ service.name }}</div>
-                          <div class="accordion__block_item_address">{{ service.price }} ₽</div>
-                        </div>
-                      {% endfor %}
-                  </div>
-                </div>
-              {% endfor %}
-						</div>
-					</div>
-					<div class="service__form_block service__masters">
-						<button class="accordion">(Выберите мастера)</button>
-						<div class="panel">
-						  
-						</div>
-						  
-						
-
-					</div>
-        -->
-				</form>
+          <select name="shop" id="shop_selector" class="service__form_select">
+            {% for pk, name in shops %}
+              <option value="{{ pk }}" >{{ name }}</option>
+            {% endfor %}
+          </select>
+          <select name="service_type" id="service_type_selector" class="service__form_select">
+            <option value="" selected>(Выберите тип услуги)</option>
+            {% for pk, name in service_types %}
+              <option value="{{ pk }}" >{{ name }}</option>
+            {% endfor %}
+          </select>
+          <select name="service" id="service_selector" class="service__form_select">
+            <option value="" selected>(Выберите услугу)</option>
+          </select>
+          <select name="specialist" id="specialist_selector" class="service__form_select">
+            <option value="" selected>(Выберите мастера)</option>
+          </select>
+        </div>
 			</div>
 		</div>
 	</section>
-	<section id="time">
+	<section id="time" style="display: none;">
 		<div class="container">
 			<div class="time">
 				<h2 class="time__title">Выберите время</h2>
 				<div class="time__block">
 					<div class="row">
 						<div class="col-md-4">
-							<div id="datepickerHere"></div>
+              <input name="date" id="datepickerHere" type="hidden" style="width:100%" value="">
 						</div>
 						<div class="col-md-8">
+              <input name="time" id="timefields" type="hidden" value="" >
 							<div class="time__elems">
 								<div class="time__items">
 									<div class="time__elems_intro">Утро</div>
-									<div class="time__elems_elem fic">
+									<div id="morning_timeslots" class="time__elems_elem fic">
                     {% for timeslot in timeslots.morning %}
   										<button data-time="10:00" class="time__elems_btn">{{ timeslot }}</button>
                     {% endfor %}
@@ -194,13 +155,13 @@
 									<div class="time__elems_intro">День</div>
 									<div class="time__elems_elem fic">
                     {% for timeslot in timeslots.day %}
-  										<button data-time="10:00" class="time__elems_btn">{{ timeslot }}</button>
+  										<button id="day_timeslots" data-time="10:00" class="time__elems_btn">{{ timeslot }}</button>
                     {% endfor %}
 									</div>
 								</div>
 								<div class="time__items">
 									<div class="time__elems_intro">Вечер</div>
-									<div class="time__elems_elem fic">
+									<div id="evening_timeslots" class="time__elems_elem fic">
                     {% for timeslot in timeslots.evening %}
   										<button data-time="10:00" class="time__elems_btn">{{ timeslot }}</button>
                     {% endfor %}
@@ -221,6 +182,7 @@
 			</div>
 		</div>
 	</section>
+  </form>
 	<footer id="footer">
 		<div class="container">
 			<div class="footer">
